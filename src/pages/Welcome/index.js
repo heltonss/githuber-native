@@ -2,11 +2,19 @@ import React, { Component } from 'react';
 import { ActivityIndicator, AsyncStorage, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Api from '../../services/api';
 import Styles from './styles';
-
+import PropTypes from 'prop-types';
 class Welcome extends Component {
+
+  static propTypes = {
+    navigation: PropTypes.shape({
+      navigate: PropTypes.func,
+    }).isRequired,
+  };
+  
   state = {
     username: '',
     loading: false,
+    error: false,
   }
 
   checkUserExists = async (username) => {
@@ -24,7 +32,6 @@ class Welcome extends Component {
     console.tron.log('Usuário logado');
     const { username } = this.state;
     const { navigation } = this.props;
-    console.tron.log(navigation)
 
     this.setState({ loading: true });
     try {
@@ -33,18 +40,17 @@ class Welcome extends Component {
 
       navigation.navigate('Repositories');
     } catch (error) {
-      this.setState({ loading: false });
-      console.tron.log('Usuário não existe');
+      this.setState({ loading: false, error: true });
     }
   };
 
   render() {
-    const { username, loading } = this.state;
+    const { username, loading, error } = this.state;
     return (
       <View style={Styles.container}>
         <Text style={Styles.title}>Bem-vindo</Text>
         <Text style={Styles.text}>Para continuar precisamos que você informe seu usuário</Text>
-
+        {error && <Text style={Styles.error}>Usuário não encontrado</Text>}
         <View style={Styles.form}>
           <TextInput
             style={Styles.input}

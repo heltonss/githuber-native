@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
-
+import { View } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Header from '../../components/Header';
 class Repositories extends Component {
+  static navigationOptions = {
+    tabBarIcon: ({ tintColor }) => <Icon name="list-alt" size={30} color={tintColor} />,
+  }
+
+
   render() {
     return (
       <View>
-        <Text> textInComponent </Text>
+        <Header title="Repositórios" />
       </View>
     );
   }
