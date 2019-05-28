@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AsyncStorage, { ActivityIndicator, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, AsyncStorage, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import Api from '../../services/api';
 import Styles from './styles';
 
@@ -11,6 +11,7 @@ class Welcome extends Component {
 
   checkUserExists = async (username) => {
     const user = await Api.get(`/users/${username}`);
+    console.tron.log('Usuário ', user);
 
     return user;
   }
@@ -20,14 +21,15 @@ class Welcome extends Component {
   }
 
   signIn = async () => {
+    console.tron.log('Usuário logado');
     const { username } = this.state;
     const { navigation } = this.props;
+    console.tron.log(navigation)
 
     this.setState({ loading: true });
     try {
       await this.checkUserExists(username);
       await this.saveUser(username);
-      console.tron.log('Usuário logado');
 
       navigation.navigate('Repositories');
     } catch (error) {
