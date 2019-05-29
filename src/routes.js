@@ -3,7 +3,6 @@ import Organizations from './pages/organizations';
 import Repositories from './pages/Repositories';
 import Welcome from './pages/Welcome';
 import { colors } from './Styles';
-import Icon from 'react-native-vector-icons';
 
 const Routes = (userLogged = false) => createAppContainer(createSwitchNavigator(
   {
