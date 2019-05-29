@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Header from '../../components/Header';
 import api from '../../services/api';
 import RepositoryItems from './RepositoryItem';
-import Style from './styles';
+import styles from './styles';
 
 class Repositories extends Component {
   static navigationOptions = {
@@ -14,37 +14,44 @@ class Repositories extends Component {
   state = {
     data: [],
     loading: true,
+    refreshing: false,
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.loadRepositories();
+  }
+
+  loadRepositories = async () => {
+    this.setState({ refreshing: true });
     const username = await AsyncStorage.getItem('@Githuber:username');
     const { data } = await api.get(`/users/${username}/repos`);
 
-    this.setState({ data, loading: false });
+    this.setState({ data, loading: false, refreshing: false });
   }
 
   renderListItem = ({ item }) => <RepositoryItems repository={item} />
 
   renderList = () => {
-    const { data } = this.state;
+    const { data, refreshing } = this.state;
     return (
       <FlatList
         data={data}
         keyExtractor={item => String(item.id)}
         renderItem={this.renderListItem}
+        onRefresh={this.loadRepositories}
+        refreshing={refreshing}
       />
-    )
-
+    );
   }
 
   render() {
     const { loading } = this.state;
     return (
-      <View>
+      <View style={styles.container}>
         <Header title="Repositórios" />
         {
           loading
-            ? <ActivityIndicator style={Style.loading} />
+            ? <ActivityIndicator styles={styles.loading} />
             : this.renderList()
         }
       </View>
